@@ -1,4 +1,5 @@
 const { expect } = require('@playwright/test');
+const path = require('path');
 const { BasePage } = require('./BasePage');
 
 class BrandLibraryPage extends BasePage {
@@ -330,11 +331,68 @@ async openExistingBrand(brandName) {
   }
 
   async verifyUploadedAssets() {
-    await this.uploadedAssetsTitle.scrollIntoViewIfNeeded();
-    await expect(this.uploadedAssetsTitle).toBeVisible();
-    await expect(this.page.getByText('brand-guidelines.pdf', { exact: true }).first()).toBeVisible();
-    await expect(this.page.getByText('Primary logo', { exact: true }).first()).toBeVisible();
+  await this.uploadedAssetsTitle
+    .scrollIntoViewIfNeeded();
+
+  await expect(
+    this.uploadedAssetsTitle
+  ).toBeVisible();
+
+  const guidelinesPath =
+    process.env.GUIDELINES_FILE;
+
+  if (
+    !guidelinesPath ||
+    !guidelinesPath.trim()
+  ) {
+    throw new Error(
+      'GUIDELINES_FILE must be configured ' +
+      'to verify uploaded brand assets.'
+    );
   }
+
+  const expectedGuidelinesFile =
+    path.basename(
+      guidelinesPath.trim()
+    );
+
+  console.log(
+    `Verifying uploaded guideline file: ` +
+    `${expectedGuidelinesFile}`
+  );
+
+  const guidelineFile =
+    this.page.getByText(
+      expectedGuidelinesFile,
+      {
+        exact: true
+      }
+    ).first();
+
+  await expect(
+    guidelineFile
+  ).toBeVisible({
+    timeout: 20000
+  });
+
+  const primaryLogoLabel =
+    this.page.getByText(
+      'Primary logo',
+      {
+        exact: true
+      }
+    ).first();
+
+  await expect(
+    primaryLogoLabel
+  ).toBeVisible({
+    timeout: 20000
+  });
+
+  console.log(
+    'Mandatory uploaded assets verified.'
+  );
+}
 
   async verifyOptionalWarnings() {
     if (await this.needsAttentionTitle.isVisible().catch(() => false)) {
