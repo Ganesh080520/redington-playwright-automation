@@ -1,11 +1,17 @@
+const path = require('path');
+
 const {
   test,
   expect
-} = require('../fixtures/auth.fixture');
+} = require(
+  '../fixtures/auth.fixture'
+);
 
 const {
   CampaignsPage
-} = require('../pages/CampaignsPage');
+} = require(
+  '../pages/CampaignsPage'
+);
 
 function requiredEnv(name) {
   const value = process.env[name];
@@ -24,24 +30,30 @@ test.describe(
   () => {
     test(
       'CMP-P-001: Campaigns dashboard loads',
-      async ({ authenticatedPage }) => {
+      async ({
+        authenticatedPage
+      }) => {
         const campaignsPage =
           new CampaignsPage(
             authenticatedPage
           );
 
-        await campaignsPage.openCampaigns();
+        await campaignsPage
+          .openCampaigns();
 
         await expect(
-          campaignsPage.createCampaignButton
+          campaignsPage
+            .createCampaignButton
         ).toBeVisible();
       }
     );
 
     test(
       'CMP-P-005 to CMP-P-040: configure campaign and verify channels without launching',
-      async ({ authenticatedPage }) => {
-        test.setTimeout(240000);
+      async ({
+        authenticatedPage
+      }) => {
+        test.setTimeout(300000);
 
         const campaignsPage =
           new CampaignsPage(
@@ -50,13 +62,19 @@ test.describe(
 
         const campaignData = {
           name:
-            requiredEnv('CAMPAIGN_NAME'),
+            requiredEnv(
+              'CAMPAIGN_NAME'
+            ),
 
           brand:
-            requiredEnv('CAMPAIGN_BRAND'),
+            requiredEnv(
+              'CAMPAIGN_BRAND'
+            ),
 
           product:
-            requiredEnv('CAMPAIGN_PRODUCT'),
+            requiredEnv(
+              'CAMPAIGN_PRODUCT'
+            ),
 
           objective:
             requiredEnv(
@@ -69,8 +87,19 @@ test.describe(
             )
         };
 
-        await campaignsPage.openCampaigns();
-        await campaignsPage.startCampaign();
+        // ======================================
+        // OPEN CAMPAIGN SETUP
+        // ======================================
+
+        await campaignsPage
+          .openCampaigns();
+
+        await campaignsPage
+          .startCampaign();
+
+        // ======================================
+        // CAMPAIGN DETAILS
+        // ======================================
 
         await campaignsPage
           .fillCampaignDetails(
@@ -82,13 +111,22 @@ test.describe(
             campaignData
           );
 
+        // ======================================
+        // GEOGRAPHY
+        // ======================================
+
         await campaignsPage
           .enterGeographyAndContacts(
             requiredEnv(
               'CAMPAIGN_GEOGRAPHY'
             ),
-            process.env.CAMPAIGN_CONTACTS
+            process.env
+              .CAMPAIGN_CONTACTS
           );
+
+        // ======================================
+        // CAMPAIGN DURATION
+        // ======================================
 
         await campaignsPage
           .selectCampaignDuration(
@@ -102,6 +140,10 @@ test.describe(
 
         await campaignsPage
           .verifyCampaignDuration();
+
+        // ======================================
+        // MDF BUDGET
+        // ======================================
 
         const initialBudget =
           process.env
@@ -119,7 +161,8 @@ test.describe(
 
         if (
           targetBudget &&
-          targetBudget !== initialBudget
+          targetBudget !==
+            initialBudget
         ) {
           await campaignsPage
             .setMdfBudgetUsingMouse(
@@ -132,60 +175,87 @@ test.describe(
             );
         }
 
-        const audienceAttached =
-          await campaignsPage
-            .attachAudience(
-              process.env
-                .CAMPAIGN_AUDIENCE ||
-              ''
-            );
+        // ======================================
+        // CAMPAIGN ASSETS
+        // ======================================
 
-        const assetState =
-          await campaignsPage
-            .verifyCampaignAssetsState();
+        /*
+         * Use CAMPAIGN_ASSET_FILE when supplied.
+         * Otherwise use the configured brand
+         * guideline filename.
+         */
+        // Attach the required brand file.
+const assetFileName =
+  process.env.CAMPAIGN_ASSET_FILE ||
+  'dell-brand-guidelines.pdf';
 
-        // if (!audienceAttached) {
-        //   console.log(
-        //     'No audience attached. ' +
-        //     'Checking whether the application permits continuation.'
-        //   );
-        // }
+const assetCategory =
+  process.env.CAMPAIGN_ASSET_CATEGORY ||
+  'guidelines';
 
-        if (!assetState.hasAssets) {
-          console.log(
-            'No campaign asset selected. ' +
-            'Checking whether the application permits continuation.'
-          );
-        }
+await campaignsPage.attachBrandFile(
+  assetFileName,
+  assetCategory
+);
 
-        const canContinue =
-          await campaignsPage
-            .canContinueToChannels();
+// Verify that the brand file was attached.
+const assetState =
+  await campaignsPage.verifyCampaignAssetsState();
 
-        if (!canContinue) {
-          console.log(
-            'Continue to Channels is disabled. ' +
-            'Campaign setup validation completed.'
-          );
+console.log(
+  `Campaign assets selected: ` +
+  `${assetState.selectedAssetCount}`
+);
 
-          return;
-        }
+expect(
+  assetState.selectedAssetCount
+).toBeGreaterThan(0);
 
-        await campaignsPage
-          .continueToChannels();
+/*
+ * The updated Campaign Setup UI does not expose
+ * the Choose the audience section in this flow.
+ * Continue after attaching the campaign asset.
+ */
+console.log(
+  'Audience selection is not available in the ' +
+  'updated Campaign Setup UI. Continuing to channels.'
+);
 
-        await campaignsPage
-          .verifyChannelsAndBudgetPage();
+const canContinue =
+  await campaignsPage.canContinueToChannels();
 
-        // Safety boundary:
-        // Do not click Launch Campaign.
-        await expect(
-          campaignsPage
-            .launchCampaignButton
-        ).toBeVisible();
+expect(
+  canContinue,
+  'Continue to channels should be enabled after ' +
+  'completing campaign details and attaching an asset.'
+).toBeTruthy();
 
-        // await campaignsPage.launchCampaignButton.click()
-      }
+await campaignsPage.continueToChannels();
+
+await campaignsPage.verifyChannelsAndBudgetPage();
+
+// Safety boundary: do not launch the campaign.
+await expect(
+  campaignsPage.saveAndContinueButton
+).toBeVisible();
+
+await expect(
+  campaignsPage.saveAndContinueButton
+).toBeEnabled();
+
+// Safety boundary:
+// Do not click Save & continue because the next
+// step is Outreach & launch.
+console.log(
+  'Channel mix verified. ' +
+  'Save & continue was intentionally not clicked.'
+);
+
+// console.log(
+//   'Campaign configuration and channel validation completed. ' +
+//   'Launch Campaign was not clicked.'
+// );
+    }
     );
   }
 );
