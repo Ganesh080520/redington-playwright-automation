@@ -11,7 +11,8 @@
     "report": "playwright show-report",
     "test:brand-profile": "playwright test tests/brandProfile.positive.spec.js",
     "test:brand-product": "playwright test tests/brandProduct.positive.spec.js",
-    "test:brand-assets": "playwright test tests/brandAssets.positive.spec.js"
+    "test:brand-assets": "playwright test tests/brandAssets.positive.spec.js",
+    "test:reference-library": "playwright test tests/referenceLibrary.positive.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
