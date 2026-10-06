@@ -1,0 +1,19 @@
+{
+  "name": "redington-playwright-automation",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:login": "playwright test tests/login.positive.spec.js",
+    "test:brand": "playwright test tests/brandCreation.positive.spec.js",
+    "test:campaign": "playwright test tests/campaigns.positive.spec.js",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "test:brand-profile": "playwright test tests/brandProfile.positive.spec.js",
+    "test:brand-product": "playwright test tests/brandProduct.positive.spec.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "dotenv": "^17.2.1"
+  }
+}

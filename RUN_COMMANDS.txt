@@ -1,0 +1,418 @@
+REDINGTON PLAYWRIGHT AUTOMATION - TERMINAL RUN COMMANDS
+======================================================
+
+Save this file in:
+T:\redington-playwright\RUN_COMMANDS.txt
+
+Recommended project structure:
+
+redington-playwright\
+|-- pages\
+|-- tests\
+|-- fixtures\
+|-- utils\
+|-- test-data\
+|-- .env
+|-- package.json
+|-- playwright.config.js
+`-- RUN_COMMANDS.txt
+
+
+1. OPEN THE PROJECT
+===================
+
+PowerShell:
+
+T:
+cd T:\redington-playwright
+
+Command Prompt:
+
+cd /d T:\redington-playwright
+
+Open the project in VS Code:
+
+code .
+
+
+2. INSTALL THE PROJECT
+======================
+
+npm install
+npx playwright install chromium
+
+Install all supported Playwright browsers:
+
+npx playwright install
+
+Verify the Playwright version:
+
+npx playwright --version
+
+
+3. LIST AVAILABLE TESTS
+=======================
+
+npx playwright test --list
+
+
+4. RUN ALL TESTS
+================
+
+npx playwright test
+
+Run sequentially using one worker:
+
+npx playwright test --workers=1
+
+Run all tests in a visible browser:
+
+npx playwright test --headed --workers=1
+
+
+5. LOGIN TESTS
+==============
+
+npm run test:login
+
+Direct command:
+
+npx playwright test tests/login.positive.spec.js
+
+Headed mode:
+
+npx playwright test tests/login.positive.spec.js --headed --workers=1
+
+Debug mode:
+
+npx playwright test tests/login.positive.spec.js --debug --workers=1
+
+UI mode:
+
+npx playwright test tests/login.positive.spec.js --ui
+
+
+6. BRAND CREATION TESTS
+=======================
+
+npm run test:brand-creation
+
+Direct command:
+
+npx playwright test tests/brandCreation.positive.spec.js
+
+Headed mode:
+
+npx playwright test tests/brandCreation.positive.spec.js --headed --workers=1
+
+Debug mode:
+
+npx playwright test tests/brandCreation.positive.spec.js --debug --workers=1
+
+UI mode:
+
+npx playwright test tests/brandCreation.positive.spec.js --ui
+
+
+7. AI BRAND PROFILE TESTS
+=========================
+
+npm run test:brand-profile
+
+Direct command:
+
+npx playwright test tests/brandProfile.positive.spec.js
+
+Headed mode:
+
+npx playwright test tests/brandProfile.positive.spec.js --headed --workers=1
+
+Debug mode:
+
+npx playwright test tests/brandProfile.positive.spec.js --debug --workers=1
+
+UI mode:
+
+npx playwright test tests/brandProfile.positive.spec.js --ui
+
+
+8. BRAND PRODUCT TESTS
+======================
+
+npm run test:brand-product
+
+Direct command:
+
+npx playwright test tests/brandProduct.positive.spec.js
+
+Headed mode:
+
+npx playwright test tests/brandProduct.positive.spec.js --headed --workers=1
+
+Debug mode:
+
+npx playwright test tests/brandProduct.positive.spec.js --debug --workers=1
+
+UI mode:
+
+npx playwright test tests/brandProduct.positive.spec.js --ui
+
+
+9. CAMPAIGN TESTS
+=================
+
+npm run test:campaign
+
+Direct command:
+
+npx playwright test tests/campaigns.positive.spec.js
+
+Headed mode:
+
+npx playwright test tests/campaigns.positive.spec.js --headed --workers=1
+
+Debug mode:
+
+npx playwright test tests/campaigns.positive.spec.js --debug --workers=1
+
+UI mode:
+
+npx playwright test tests/campaigns.positive.spec.js --ui
+
+
+10. RUN TESTS IN THE RECOMMENDED ORDER
+======================================
+
+npm run test:login
+npm run test:brand-creation
+npm run test:brand-profile
+npm run test:brand-product
+npm run test:campaign
+npx playwright show-report
+
+
+11. RUN ALL REDINGTON SPEC FILES TOGETHER
+=========================================
+
+PowerShell single-line command:
+
+npx playwright test tests/login.positive.spec.js tests/brandCreation.positive.spec.js tests/brandProfile.positive.spec.js tests/brandProduct.positive.spec.js tests/campaigns.positive.spec.js --workers=1
+
+PowerShell multiline command:
+
+npx playwright test `
+  tests/login.positive.spec.js `
+  tests/brandCreation.positive.spec.js `
+  tests/brandProfile.positive.spec.js `
+  tests/brandProduct.positive.spec.js `
+  tests/campaigns.positive.spec.js `
+  --workers=1
+
+
+12. RUN ONE TEST BY ITS TITLE OR ID
+===================================
+
+Login page test:
+
+npx playwright test tests/login.positive.spec.js -g "LGN-P-001"
+
+Brand Creation page test:
+
+npx playwright test tests/brandCreation.positive.spec.js -g "BRD-P-001"
+
+Brand Profile reopen test:
+
+npx playwright test tests/brandProfile.positive.spec.js -g "BPR-P-001"
+
+Brand Profile review test:
+
+npx playwright test tests/brandProfile.positive.spec.js -g "BPR-P-004"
+
+Brand Product test:
+
+npx playwright test tests/brandProduct.positive.spec.js -g "PRD-P-001"
+
+Campaign dashboard test:
+
+npx playwright test tests/campaigns.positive.spec.js -g "CMP-P-001"
+
+Campaign setup and channels test:
+
+npx playwright test tests/campaigns.positive.spec.js -g "CMP-P-005 to CMP-P-040"
+
+
+13. PLAYWRIGHT UI MODE
+======================
+
+npx playwright test --ui
+
+
+14. DEBUG MODE
+==============
+
+npx playwright test --debug --workers=1
+
+
+15. RE-RUN ONLY FAILED TESTS
+============================
+
+npx playwright test --last-failed
+
+Headed mode:
+
+npx playwright test --last-failed --headed --workers=1
+
+Debug mode:
+
+npx playwright test --last-failed --debug --workers=1
+
+
+16. HTML REPORT
+===============
+
+Run tests with the HTML reporter:
+
+npx playwright test --reporter=html
+
+Open the latest report:
+
+npx playwright show-report
+
+Open the default report folder:
+
+npx playwright show-report playwright-report
+
+
+17. TRACE VIEWER
+================
+
+General command:
+
+npx playwright show-trace "test-results\FAILED-TEST-FOLDER\trace.zip"
+
+Example:
+
+npx playwright show-trace "test-results\campaigns.positive-Redingt-6ad25--channels-without-launching-chromium\trace.zip"
+
+
+18. OPEN RESULT FOLDERS
+=======================
+
+explorer .\test-results
+explorer .\playwright-report
+
+
+19. RUN ON A PARTICULAR BROWSER
+===============================
+
+Chromium:
+
+npx playwright test --project=chromium
+
+Firefox:
+
+npx playwright test --project=firefox
+
+WebKit:
+
+npx playwright test --project=webkit
+
+Install all browsers first when required:
+
+npx playwright install chromium firefox webkit
+
+
+20. VERIFY THE ENVIRONMENT FILE
+===============================
+
+PowerShell:
+
+Test-Path .\.env
+
+Display only environment-variable names without exposing values:
+
+Get-Content .\.env | ForEach-Object { if ($_ -match '^\s*([^#=]+)=') { $matches[1].Trim() } }
+
+Do not print the complete .env file during a demonstration because it contains credentials.
+
+
+21. VERIFY TEST-DATA FILES
+==========================
+
+Test-Path .\test-data\brand-guidelines.pdf
+Test-Path .\test-data\primary-logo.png
+Test-Path .\test-data\product-datasheet.pdf
+
+List all test-data files:
+
+Get-ChildItem .\test-data
+
+
+22. UPDATE PLAYWRIGHT
+=====================
+
+npm install -D @playwright/test@latest
+npx playwright install
+
+
+23. CLEAN PLAYWRIGHT CACHE WHEN REQUIRED
+========================================
+
+Only use this when browser installation is corrupted:
+
+npx playwright uninstall --all
+npx playwright install chromium
+
+
+24. RECOMMENDED LIVE-DEMO COMMANDS
+==================================
+
+Login:
+
+npx playwright test tests/login.positive.spec.js --headed --workers=1
+
+Brand Creation:
+
+npx playwright test tests/brandCreation.positive.spec.js --headed --workers=1
+
+Brand Profile:
+
+npx playwright test tests/brandProfile.positive.spec.js --headed --workers=1
+
+Brand Product:
+
+npx playwright test tests/brandProduct.positive.spec.js --headed --workers=1
+
+Campaign:
+
+npx playwright test tests/campaigns.positive.spec.js --headed --workers=1
+
+
+25. PACKAGE.JSON SCRIPT REFERENCE
+=================================
+
+The package.json scripts should include commands similar to the following:
+
+"scripts": {
+  "test": "playwright test",
+  "test:headed": "playwright test --headed --workers=1",
+  "test:ui": "playwright test --ui",
+  "test:login": "playwright test tests/login.positive.spec.js",
+  "test:brand-creation": "playwright test tests/brandCreation.positive.spec.js",
+  "test:brand-profile": "playwright test tests/brandProfile.positive.spec.js",
+  "test:brand-product": "playwright test tests/brandProduct.positive.spec.js",
+  "test:campaign": "playwright test tests/campaigns.positive.spec.js",
+  "report": "playwright show-report"
+}
+
+
+IMPORTANT EXECUTION NOTES
+=========================
+
+1. Always run commands from T:\redington-playwright.
+2. Use --workers=1 for state-dependent and demonstration executions.
+3. Use --headed when the browser must be visible.
+4. Use --debug or --ui when diagnosing a failure.
+5. Do not click Launch Campaign during QA automation unless explicitly authorized.
+6. Verify the required upload files before Brand Creation execution.
+7. Open the HTML report and trace when a test fails.
